@@ -12,4 +12,4 @@ Functions:
 `flatten()`
 `connective_redundancy()`
 `centrality_neighborhood()`
-`multidesc()
+`multidesc()`
