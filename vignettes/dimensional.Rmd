@@ -1,0 +1,48 @@
+---
+title: "dimensional"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{dimensional}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(dimensional)
+library(tidygraph)
+```
+# How to use the package:
+## Data:
+Dimensional takes data in a table graph format. This can be added a number of ways, for details see https://www.data-imaginist.com/2017/introducing-tidygraph/. For an example, we will here use an edgelist and a nodelist to create an undirected table graph.
+```{r make tbl-graph}
+decor.graph <- tbl_graph(nodes = nodes_decor, edges = edges_decor, directed = FALSE)
+
+decor.graph
+```
+In this example data, the different dimensions of the graph are stored as edge attributes under the `name` variable. You should make sure that your data also stores the dimensions this way, and be certain to call this variable "name".
+
+## `flatten()`
+This function flattens a multilayer graph into a simple graph. This function is useful for comparing multilayer with simple network measures. 
+`flatten()`simply collapses all edges between a pair of actors across all layers into a single edge. If there is a weight column, the weights of all collapsed edges will be summed. If weight = NULL, no weights are retained. 
+```{r}
+simple.flat <- flatten(decor.graph, weight = NULL)
+
+simple.flat
+
+weighted.flat <- flatten(decor.graph, weight = weight)
+
+weighted.flat
+```
+## `multidesc()`: 
+This function will give a particular set of measures for a basic description of a multilayer network, both layer by layer and for the flattened network. The measures are: number of nodes, density, clustering coefficient, degree centralization, average path length, diameter.
+```{r multidesc}
+multidesc(decor.graph)
+```
+
