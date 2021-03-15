@@ -43,7 +43,7 @@ weighted.flat
 ## `multidesc()`: 
 This function will give a particular set of measures for a basic description of a multilayer network, both layer by layer and for the flattened network. The measures are: number of nodes, density, clustering coefficient, degree centralization, average path length, diameter.
 ```{r multidesc}
-multidesc(decor.graph)
+# multidesc(decor.graph)
 ```
 
 ## `centrality_neighborhood()`

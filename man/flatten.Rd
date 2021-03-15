@@ -2,9 +2,14 @@
 % Please edit documentation in R/flatten.R
 \name{flatten}
 \alias{flatten}
-\title{A function to flatten a multilayer network into a single-layer network, see Dickison et al. 2016, p.39}
+\title{Flatten a multilayer network}
 \usage{
 flatten(graph, weight)
+}
+\arguments{
+\item{graph}{A graph of the tbl-graph class}
+
+\item{weight}{A weight attribute for weighted edges. Defaults to unweighted edges.}
 }
 \description{
 A function to flatten a multilayer network into a single-layer network, see Dickison et al. 2016, p.39
