@@ -1,0 +1,1 @@
+This is a package aimed at carrying out analyses of multi-dimensional social networks. It is built on igraph and tidygraph and can be integrated into a tidyverse workflow. The package is currently under development.
