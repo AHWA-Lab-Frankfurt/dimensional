@@ -46,3 +46,21 @@ This function will give a particular set of measures for a basic description of 
 multidesc(decor.graph)
 ```
 
+## `centrality_neighborhood()`
+This augments the `centrality_` classes in tidygraph with neighborhood centrality as defined by Berlingerio et al. (2011). `centrality_neighborhood()` can take a specified actor, or a vector of actors, as well as a specified layer of vector of layers. If these are left unspecified, it defaults to the entire graph. The function appends a neighborhood centrality measure as a node attribute named "neighbours"
+```{r centrality_neighborhood}
+a <- c("5", "6")  #specify actors by id
+l <- c("folded_strip_roulette")
+
+centrality_neighborhood(decor.graph)
+
+```
+## `connective_redundancy()``
+Calculates the connective redundancy of a set of actors over a set of layers as defined by Dickison et al. (2016). Can take a specified actor, or a vector of actors, as well as a specified layer of vector of layers. If these are left unspecified, it defaults to the entire graph. Returns a tibble with actor name, degree, neighbors, and redundancy.
+```{r connective redundancy}
+conred <- connective_redundancy(decor.graph)
+
+head(conred)
+```
+
+
