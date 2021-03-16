@@ -1,6 +1,6 @@
 #' Neighborhood centrality
 #'
-#' Calculate neighborhood centrality for a set of acotrs over a set of layers
+#' Calculate neighborhood centrality for a set of acotrs over a set of layers. The output is a vector with values for every node.
 #' @param graph A graph of class tbl_graph
 #' @param actors An actor or a vector of actors. Defaults to all actors in the graph.
 #' @param layers A layer or a vector of layers. Defaults to all layers of the graph
