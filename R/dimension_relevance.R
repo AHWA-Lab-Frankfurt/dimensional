@@ -1,3 +1,10 @@
+#' Dimension relevance
+#'
+#' Calculate the relevance of the dimensions(layers) for each node of a network. The output is a dataframe with the neighbor_centrality of the whole network and the relevance of each dimension for each node aswell as the mean relevance of each dimension for the whole network.
+#' @param graph A graph of class tbl_graph
+#' @param weighted Logical value if the neighborhood centrality should be weighted or not. Defaults to unweighted network.
+#' @export
+
 dimension_relevance <- function(graph, weighted) {
   #graph <- enquote(graph)
 
