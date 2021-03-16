@@ -4,12 +4,12 @@
 \alias{flatten}
 \title{Flatten a multilayer network}
 \usage{
-flatten(graph, weight)
+flatten(graph, weighted = FALSE)
 }
 \arguments{
 \item{graph}{A graph of the tbl-graph class}
 
-\item{weight}{A weight attribute for weighted edges. Defaults to unweighted edges.}
+\item{weighted}{should the flattening take edge weights into account (TRUE/FALSE)? Defaults to unweighted edges. Note that weights must be stored in an edge variable named "weight".}
 }
 \description{
 A function to flatten a multilayer network into a single-layer network, see Dickison et al. 2016, p.39
