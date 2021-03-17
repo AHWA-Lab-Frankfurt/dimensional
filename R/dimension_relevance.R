@@ -5,7 +5,7 @@
 #' @param weighted Logical value if the neighborhood centrality should be weighted or not. Defaults to unweighted network.
 #' @export
 
-dimension_relevance <- function(graph, weighted) {
+dimension_relevance <- function(graph, weighted = FALSE) {
   #graph <- enquote(graph)
 
   #the nodes.id, the nodes.label and the edges.name vectors are needed for the for-loop
@@ -28,34 +28,12 @@ dimension_relevance <- function(graph, weighted) {
   #a df in which the neighbor values of the different nodes will be documented
   dimcentrality.df <- data.frame(id = nodes.id, label = nodes.label)
 
-  if(missing(weighted) | weighted == FALSE){
-
-    deg <- graph%>%
-      centrality_neighborhood()
-
-    dimcentrality.df <- dimcentrality.df %>%
-      add_column(deg)
-
-    names(dimcentrality.df)[names(dimcentrality.df) == "deg"] <- "neighbor"
-
-    for(j in 1:length(edges.name)){
-
-      ##we create a vector of all the centralities of a layer
-      deg <- decor.graph %>%
-        centrality_neighborhood(layer = edges.name[j])
-
-
-      dimcentrality.df <- dimcentrality.df %>%
-        add_column(deg)
-
-      names(dimcentrality.df)[names(dimcentrality.df) == "deg"] <- edges.name[j]
-
-    }
-  }
-  else{
-
+  if(weighted == TRUE){
     deg <- graph%>%
       centrality_neighborhood(weighted = TRUE)
+
+    deg <- data.frame(deg = deg)
+
 
     dimcentrality.df <- dimcentrality.df %>%
       add_column(deg)
@@ -68,16 +46,43 @@ dimension_relevance <- function(graph, weighted) {
       deg <- decor.graph %>%
         centrality_neighborhood(layer = edges.name[j], weighted = TRUE)
 
+      deg <- data.frame(deg = deg)
 
       dimcentrality.df <- dimcentrality.df %>%
         add_column(deg)
 
-      names(dimcentrality.df)[names(dimcentrality.df) == "deg"] <- edges.name[j]
+      names(dimcentrality.df)[names(dimcentrality.df) == "simple"] <- edges.name[j]
     }
 
   }
-  dimrel.df <- dimcentrality.df %>%
-    mutate(across(4:ncol(dimcentrality.df), function(x) x / neighbor))
+  else{
+
+    deg <- graph%>%
+      centrality_neighborhood()
+
+
+    dimcentrality.df <- dimcentrality.df %>%
+      add_column(deg)
+
+    names(dimcentrality.df)[names(dimcentrality.df) == "deg"] <- "neighbor"
+
+    for(j in 1:length(edges.name)){
+
+      ##we create a vector of all the centralities of a layer
+      deg <- decor.graph %>%
+        centrality_neighborhood(layer = edges.name[j])
+
+      deg <- data.frame(deg = deg)
+
+
+      dimcentrality.df <- dimcentrality.df %>%
+        add_column(deg)
+
+      names(dimcentrality.df)[names(dimcentrality.df) == "simple"] <- edges.name[j]
+
+    }
+
+  }
 
   dimrel.df <- dimcentrality.df %>%
     mutate(across(4:ncol(dimcentrality.df), function(x) x / neighbor))
@@ -89,4 +94,5 @@ dimension_relevance <- function(graph, weighted) {
 
   dimrel.df <- rbind(dimrel.df, dimrelmean)
 
+  return(dimrel.df)
 }

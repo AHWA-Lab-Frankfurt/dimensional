@@ -47,12 +47,15 @@ multidesc(decor.graph)
 ```
 
 ## `centrality_neighborhood()`
-This augments the `centrality_` classes in tidygraph with neighborhood centrality as defined by Berlingerio et al. (2011). `centrality_neighborhood()` can take a specified actor, or a vector of actors, as well as a specified layer of vector of layers. If these are left unspecified, it defaults to the entire graph. The function appends a neighborhood centrality measure as a node attribute named "neighbours"
+This augments the `centrality_` classes in tidygraph with neighborhood centrality as defined by Berlingerio et al. (2011). `centrality_neighborhood()` can take a specified actor, or a vector of actors, as well as a specified layer of vector of layers. If these are left unspecified, it defaults to the entire graph. The function appends a neighborhood centrality measure as a node attribute named "neighbours". The output is a vector that can be added to the node list.
 ```{r centrality_neighborhood}
 a <- c("5", "6")  #specify actors by id
 l <- c("folded_strip_roulette")
 
 centrality_neighborhood(decor.graph)
+
+decor.graph %>% 
+  activate no
 
 ```
 ## `connective_redundancy()``
