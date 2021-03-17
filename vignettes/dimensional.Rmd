@@ -65,15 +65,15 @@ conred <- connective_redundancy(decor.graph)
 head(conred)
 ```
 
-## `dimensional_correlation()``
-Calculates the correlation between dimensions based on the QAP (Krackhardt 1988) of the adjacency matrices of the dimensions as defined by Dickison et al. (2016). The adjacency matrices can be based on weighted edges. By default the edges are unweighted. The output is a correlation matrix of the dimensions.
+## `dimensional_correlation_node()``
+Calculates the correlation between dimensions based on the neighborhood centrality of the nodes in each layer as defined by Dickison et al. (2016). The neighborhood centrality can be weighted. By default it is unweighted. The output is a correlation matrix of the dimensions.
 ```{r}
-dimension.correlation <- dimension_correlation(decor.graph) 
+dimension.correlation.node <- dimension_correlation_node(decor.graph) 
 
 
 #plotting a heatmap for the correlation matrix
-dimension.correlation[lower.tri(dimension.correlation, diag = TRUE)] <- NA
-cor_tri <- as.data.frame(dimension.correlation) %>% 
+dimension.correlation.node[lower.tri(dimension.correlation.node, diag = TRUE)] <- NA
+cor_tri <- as.data.frame(dimension.correlation.node) %>% 
   mutate(Var1 = factor(row.names(.), levels=row.names(.))) %>% 
   gather(key = Var2, value = value, -Var1, na.rm = TRUE, factor_key = TRUE) 
 
@@ -82,4 +82,5 @@ ggplot(data = cor_tri, aes(Var2, Var1, fill = value)) +
  scale_fill_viridis_c()+
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
+
 
