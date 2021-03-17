@@ -76,6 +76,18 @@ head(conred)
 ## `dimension_relevance()``
 Calculates the relevance of each layer for each node as defined by Berlingerio et al. (2011). The neighborhood centrality of the layer is divided by the neighborhood centrality of the flattened network. The neighborhood centrality can be weighted. By default it is unweighted. It returns a dataframe with the dimension relevance of each layer on each node aswell as a row with the mean dimension relevance for the whole graph.
 ```{r}
-dimension_relevance(decor.graph, weighted = FALSE)
+dimension_relevance(decor.graph, weighted = TRUE)
+
+dimheat <- decor.graph %>% 
+  dimension_relevance() %>% 
+ # mutate(Var1 = factor(row.names(.), levels=row.names(.))) %>% 
+  select(-id, -neighbor) %>% 
+  filter(label != "mean") %>% 
+  gather(key = "decor", value = "dimension_relevance", -label, na.rm = TRUE) 
+
+ggplot(data = dimheat, aes(decor, label, fill = dimension_relevance)) + 
+  geom_tile()+
+ scale_fill_viridis_c()+
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 

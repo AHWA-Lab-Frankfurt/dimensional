@@ -51,7 +51,7 @@ dimension_relevance <- function(graph, weighted = FALSE) {
       dimcentrality.df <- dimcentrality.df %>%
         add_column(deg)
 
-      names(dimcentrality.df)[names(dimcentrality.df) == "simple"] <- edges.name[j]
+      names(dimcentrality.df)[names(dimcentrality.df) == "deg"] <- edges.name[j]
     }
 
   }
