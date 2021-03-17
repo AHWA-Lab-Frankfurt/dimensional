@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(dimensional)
 library(tidygraph)
+library(igraph)
+library(tidyverse)
 ```
 # How to use the package:
 ## Data:
@@ -63,4 +65,21 @@ conred <- connective_redundancy(decor.graph)
 head(conred)
 ```
 
+## `dimensional_correlation()``
+Calculates the correlation between dimensions based on the QAP (Krackhardt 1988) of the adjacency matrices of the dimensions as defined by Dickison et al. (2016). The adjacency matrices can be based on weighted edges. By default the edges are unweighted. The output is a correlation matrix of the dimensions.
+```{r}
+dimension.correlation <- dimension_correlation(decor.graph) 
+
+
+#plotting a heatmap for the correlation matrix
+dimension.correlation[lower.tri(dimension.correlation, diag = TRUE)] <- NA
+cor_tri <- as.data.frame(dimension.correlation) %>% 
+  mutate(Var1 = factor(row.names(.), levels=row.names(.))) %>% 
+  gather(key = Var2, value = value, -Var1, na.rm = TRUE, factor_key = TRUE) 
+
+ggplot(data = cor_tri, aes(Var2, Var1, fill = value)) + 
+  geom_tile()+
+ scale_fill_viridis_c()+
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
 
