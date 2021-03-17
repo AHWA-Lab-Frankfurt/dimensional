@@ -64,6 +64,7 @@ conred <- connective_redundancy(decor.graph)
 
 head(conred)
 ```
+
 ## `dimensional_correlation()``
 ```{r}
 dimension.correlation <- dimension_correlation(decor.graph) 
