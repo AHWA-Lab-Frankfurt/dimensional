@@ -66,6 +66,7 @@ head(conred)
 ```
 
 ## `dimensional_correlation()``
+Calculates the correlation between dimensions based on the QAP (Krackhardt 1988) of the adjacency matrices of the dimensions as defined by Dickison et al. (2016). The adjacency matrices can be based on weighted edges. By default the edges are unweighted. The output is a correlation matrix of the dimensions.
 ```{r}
 dimension.correlation <- dimension_correlation(decor.graph) 
 
