@@ -17,6 +17,9 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(dimensional)
 library(tidygraph)
+library(tidyverse)
+library(ggraph)
+library(igraph)
 ```
 # How to use the package:
 ## Data:
@@ -47,7 +50,7 @@ multidesc(decor.graph)
 ```
 
 ## `centrality_neighborhood()`
-This augments the `centrality_` classes in tidygraph with neighborhood centrality as defined by Berlingerio et al. (2011). `centrality_neighborhood()` can take a specified actor, or a vector of actors, as well as a specified layer of vector of layers. If these are left unspecified, it defaults to the entire graph. The function appends a neighborhood centrality measure as a node attribute named "neighbours". The output is a vector that can be added to the node list.
+This augments the `centrality_` classes in tidygraph with neighborhood centrality as defined by Berlingerio et al. (2011). `centrality_neighborhood()` can take a specified actor, or a vector of actors, as well as a specified layer of vector of layers. If these are left unspecified, it defaults to the entire graph. The neighbors can also be weighted. By default it is unweighted. The function appends a neighborhood centrality measure as a node attribute named "neighbours". The output is a vector that can be added to the node list.
 ```{r centrality_neighborhood}
 a <- c("5", "6")  #specify actors by id
 l <- c("folded_strip_roulette")
@@ -55,8 +58,12 @@ l <- c("folded_strip_roulette")
 centrality_neighborhood(decor.graph)
 
 decor.graph %>% 
-  activate no
-
+  activate(nodes) %>% 
+  mutate(deg = centrality_neighborhood(., weighted = TRUE)) %>% 
+#not perfect as it doesnt work without the "."
+  ggraph(layout = "stress") +
+  geom_edge_fan(aes(col = name))+
+  geom_node_point(aes(size = deg))
 ```
 ## `connective_redundancy()``
 Calculates the connective redundancy of a set of actors over a set of layers as defined by Dickison et al. (2016). Can take a specified actor, or a vector of actors, as well as a specified layer of vector of layers. If these are left unspecified, it defaults to the entire graph. Returns a tibble with actor name, degree, neighbors, and redundancy.
@@ -66,4 +73,9 @@ conred <- connective_redundancy(decor.graph)
 head(conred)
 ```
 
+## `dimension_relevance()``
+Calculates the relevance of each layer for each node as defined by Berlingerio et al. (2011). The neighborhood centrality of the layer is divided by the neighborhood centrality of the flattened network. The neighborhood centrality can be weighted. By default it is unweighted. It returns a dataframe with the dimension relevance of each layer on each node aswell as a row with the mean dimension relevance for the whole graph.
+```{r}
+dimension_relevance(decor.graph, weighted = FALSE)
+```
 
