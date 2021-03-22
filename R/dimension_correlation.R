@@ -16,7 +16,7 @@ dimension_correlation <- function(graph, weighted = FALSE){
     matlist <- list()
 
     for(j in 1:length(edges.name)) {
-      mat <- decor.graph %>%
+      mat <- decor %>%
         activate(edges) %>%
         filter(name == edges.name[j]) %>%
         as_adjacency_matrix(attr = "weight") %>%
@@ -48,7 +48,7 @@ dimension_correlation <- function(graph, weighted = FALSE){
     matlist <- list()
 
     for(j in 1:length(edges.name)) {
-      mat <- decor.graph %>%
+      mat <- graph %>%
         activate(edges) %>%
         filter(name == edges.name[j]) %>%
         as_adjacency_matrix() %>%

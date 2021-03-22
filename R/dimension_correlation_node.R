@@ -19,7 +19,7 @@ dimension_correlation_node <- function(graph, weighted = FALSE){
 
     for(j in 1:length(edges.name)) {
 
-      v <- decor.graph %>%
+      v <- graph %>%
         activate(edges) %>%
         filter(name == edges.name[j])
 
@@ -43,7 +43,7 @@ dimension_correlation_node <- function(graph, weighted = FALSE){
 
     for(j in 1:length(edges.name)) {
 
-      v <- decor.graph %>%
+      v <- graph %>%
         activate(edges) %>%
         filter(name == edges.name[j])
 
