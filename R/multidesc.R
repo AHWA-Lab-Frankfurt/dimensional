@@ -1,4 +1,6 @@
 #' A function for generating a list of descriptive measurements for the structure of a multilayer network
+#' @import tidygraph
+#' @importFrom rlang .data
 #' @export
 multidesc <- function(graph){
   x <- flatten(graph)
@@ -9,14 +11,14 @@ multidesc <- function(graph){
   avgpath <- igraph::average.path.length(x, directed = FALSE)
   diameter <- igraph::diameter(x, directed = FALSE, weights = igraph::E(x)$weight_sum)
 
-  flattened <- tibble(order, density, cc, degcent$centralization, avgpath, diameter)
+  flattened <- tibble::tibble(order, density, cc, degcent$centralization, avgpath, diameter)
 
 
   layerwise.desc <- function(layer){
     layername <- rlang::sym(layer)
-    layern <- enquo(layer)
+    layern <- dplyr::enquo(layer)
 
-    x <- decor.graph %>%
+    x <- graph %>%
       activate(edges) %>%
       filter(name == layername)
 
@@ -27,7 +29,7 @@ multidesc <- function(graph){
     avgpath <- igraph::average.path.length(x, directed = FALSE)
     diameter <- igraph::diameter(x, directed = FALSE, weights = E(x)$weight_sum)
 
-    layername <- tibble(order, density, cc, degcent$centralization, avgpath, diameter)
+    layername <- tibble::tibble(order, density, cc, degcent$centralization, avgpath, diameter)
   }
 
   #make a list of layers
