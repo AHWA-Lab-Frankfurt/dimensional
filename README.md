@@ -1,5 +1,6 @@
 # dimensional
 
+## UNDER DEVELOPMENT, CURRENTLY FOR INTERNAL USE ONLY ##
 This is a package aimed at carrying out analyses of multi-dimensional social networks. It provides easy to use functions based on:
 
 Dickison, Mark E., Magnani, Matteo & Rossi, Luca (2016): "Multilayer Social Networks". Cambridge University Press.
