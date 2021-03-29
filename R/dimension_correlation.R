@@ -8,8 +8,7 @@ dimension_correlation <- function(graph, weighted = FALSE){
 
   edges.name <- graph %>%
     get.data.frame("edges") %>%
-    select(name) %>%
-    deframe() %>%
+    pull(name) %>%
     unique()
 
   matlist <- list()
