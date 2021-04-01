@@ -41,7 +41,7 @@ rlang::enquo(weighted)
       mat <- graph %>%
        tidygraph::activate(edges) %>%
         dplyr::filter(name == edges.name[j]) %>%
-        dplyr::select(-weight) %>%
+     #   dplyr::select(-weight) %>%
         igraph::as_adjacency_matrix()
 
       mat[lower.tri(mat, diag = TRUE)] <- NA
