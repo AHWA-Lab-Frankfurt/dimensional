@@ -68,10 +68,20 @@ conred <- connective_redundancy(decor.graph)
 head(conred)
 ```
 
-## `dimensional_correlation()``
-Calculates the correlation between dimensions based on the QAP (Krackhardt 1988) of the adjacency matrices of the dimensions as defined by Dickison et al. (2016). The adjacency matrices can be based on weighted edges. By default the edges are unweighted. The output is a correlation matrix of the dimensions.
+## `dimension_matlist()``
+Calculates the adjacency matrices of the dimensions of a chosen aspect. The adjacency matrices can be based on weighted edges. By default the edges are unweighted and output is a list of correlation matrices of the dimensions. 
 ```{r}
-cor.matlist.w <- dimension_matlist(decor.graph, weighted = TRUE) 
+cor.matlist.w <- dimension_matlist(decor.graph, name, weighted = TRUE) 
+
+cor.matlist <- dimension_matlist(decor.graph, name) 
+cor.matlist[[1]]
+cor.matlist.w[["straight_cord_mat"]]
+```
+
+
+## `dimensional_correlation()``
+Calculates the correlation between dimensions based on the QAP (Krackhardt 1988) of the adjacency matrices of the dimensions as defined by Dickison et al. (2016). The adjacency matrices can be based on weighted edges. By default the edges are unweighted and output is a correlation matrix of the dimensions. If needed the output can be turned into a list also containing a matrix of the p-values of each correlation (on second position of the list). This can be used to check how robust a correlation is that appears do be interesting. 
+```{r}
 
 dimension.correlation <- dimension_correlation(cor.matlist.w)
 #plotting a heatmap for the correlation matrix
@@ -85,9 +95,22 @@ ggplot(data = cor_tri, aes(Var2, Var1, fill = value)) +
  scale_fill_viridis_c()+
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-cor.matlist <- dimension_matlist(decor.graph) 
+dimension.pv <- dimension_correlation(cor.matlist.w, pvalue = TRUE)[[2]]
+#plotting a heatmap for the correlation matrix
+dimension.pv[lower.tri(dimension.pv, diag = TRUE)] <- NA
+pv_tri <- as.data.frame(dimension.pv) %>% 
+  mutate(Var1 = factor(row.names(.), levels=row.names(.))) %>% 
+  gather(key = Var2, value = value, -Var1, na.rm = TRUE, factor_key = TRUE) %>% 
+  mutate(robustness = case_when(value < 0.05 ~ "p-value < 0.05", TRUE ~ "p-value > 0.05"))
 
-dimension.correlation <- dimension_correlation(cor.matlist)
+ggplot(pv_tri, aes(Var2, Var1, fill = robustness)) + 
+  geom_tile()+
+ scale_fill_manual(values = c("green", "red"))+
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+
+dimension.correlation <- dimension_correlation(cor.matlist, pvalue = TRUE)[[1]]
 #plotting a heatmap for the correlation matrix
 dimension.correlation[lower.tri(dimension.correlation, diag = TRUE)] <- NA
 cor_tri <- as.data.frame(dimension.correlation) %>% 
@@ -98,5 +121,19 @@ ggplot(data = cor_tri, aes(Var2, Var1, fill = value)) +
   geom_tile()+
  scale_fill_viridis_c()+
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+dimension.pv <- dimension_correlation(cor.matlist, pvalue = TRUE)[[2]]
+#plotting a heatmap for the correlation matrix
+dimension.pv[lower.tri(dimension.pv, diag = TRUE)] <- NA
+pv_tri <- as.data.frame(dimension.pv) %>% 
+  mutate(Var1 = factor(row.names(.), levels=row.names(.))) %>% 
+  gather(key = Var2, value = value, -Var1, na.rm = TRUE, factor_key = TRUE) %>% 
+  mutate(robustness = case_when(value < 0.05 ~ "p-value < 0.05", TRUE ~ "p-value > 0.05"))
+
+ggplot(pv_tri, aes(Var2, Var1, fill = robustness)) + 
+  geom_tile()+
+ scale_fill_manual(values = c("green", "red"))+
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
 ```
 
