@@ -4,11 +4,10 @@
 #' @param graph A graph of class tbl_graph
 #' @param weighted Logical value if weight of the edges of the dimensions is considered or not. Defaults to unweighted network.
 
-dimension_correlation_node <- function(graph, weighted = FALSE){
+dimension_correlation_node <- function(graph, weighted = FALSE, pvalue = FALSE){
   edges.name <- graph %>%
-    get.data.frame("edges") %>%
-    select(name) %>%
-    deframe() %>%
+    igraph::get.data.frame("edges") %>%
+    dplyr::pull(name) %>%
     unique()
 
   vlist <- list()
@@ -20,21 +19,15 @@ dimension_correlation_node <- function(graph, weighted = FALSE){
     for(j in 1:length(edges.name)) {
 
       v <- graph %>%
-        activate(edges) %>%
-        filter(name == edges.name[j])
+        tidygraph::activate(edges) %>%
+        dplyr::filter(name == edges.name[j]) %>%
+        tidygraph::activate(nodes) %>%
+        dplyr::mutate(deg = tidygraph::centrality_degree(weights = weight)) %>%
+        dplyr::pull(deg)
 
-      v <- centrality_neighborhood(v, weighted = TRUE)
 
       vlist[[edges.name[j]]] <- v
 
-    }
-    cor.mat <- c()
-
-    for(i in 1:length(vlist)){
-      for(j in 1:length(vlist)){
-        cor <- cor(vlist[[i]], vlist[[j]])
-        cor.mat <- c(cor.mat, cor)
-      }
     }
 
   }
@@ -44,29 +37,45 @@ dimension_correlation_node <- function(graph, weighted = FALSE){
     for(j in 1:length(edges.name)) {
 
       v <- graph %>%
-        activate(edges) %>%
-        filter(name == edges.name[j])
+        tidygraph::activate(edges) %>%
+        dplyr::filter(name == edges.name[j])%>%
+        tidygraph::activate(nodes) %>%
+        dplyr::mutate(deg = tidygraph::centrality_degree()) %>%
+        dplyr::pull(deg)
 
-      v <- centrality_neighborhood(v)
 
       vlist[[edges.name[j]]] <- v
 
     }
-    cor.mat <- c()
-
-    for(i in 1:length(vlist)){
-      for(j in 1:length(vlist)){
-        cor <- cor(vlist[[i]], vlist[[j]])
-        cor.mat <- c(cor.mat, cor)
-      }
-    }
 
 
   }
+  cor.mat <- c()
+  pv.mat <- c()
+
+  for(i in 1:length(vlist)){
+    for(j in 1:length(vlist)){
+      cor <- cor.test(vlist[[i]], vlist[[j]])
+      cor.mat <- c(cor.mat, cor[[4]])
+      pv.mat <- c(pv.mat, cor[[3]])
+    }
+  }
+
   dimension.correlation <- matrix(cor.mat, nrow = length(vlist), ncol = length(vlist))
   colnames(dimension.correlation) <- edges.name
   rownames(dimension.correlation) <- edges.name
 
+if(pvalue == TRUE)  {
+  dimension.pvalue <- matrix(pv.mat, nrow = length(vlist), ncol = length(vlist))
+  colnames(dimension.pvalue) <- edges.name
+  rownames(dimension.pvalue) <- edges.name
 
-  return(dimension.correlation)
+  return(list(dimension.correlation, dimension.pvalue))
+
 }
+ else{
+
+return(dimension.correlation)
+ }
+}
+

@@ -11,7 +11,7 @@ centrality_neighborhood <- function(graph, actors, layers, weighted = FALSE){
   if(weighted == TRUE) {
     if (missing(actors) & missing(layers)) {
       x <- graph %>%
-        flatten() %>%
+        flatten(weighted = TRUE) %>%
         activate(nodes) %>%
         mutate(deg = centrality_degree(weights = weight)) %>%
         pull(deg)
@@ -19,6 +19,7 @@ centrality_neighborhood <- function(graph, actors, layers, weighted = FALSE){
       return(x)
     } else if (missing(actors) & !missing(layers)){
       y <- graph %>%
+        flatten(weighted = TRUE) %>%
         activate(edges) %>%
         filter(name == layers) %>%
         activate(nodes) %>%
@@ -28,6 +29,7 @@ centrality_neighborhood <- function(graph, actors, layers, weighted = FALSE){
       return(y)
     } else if (!missing(actors) & missing(layers)){
       z <- graph %>%
+        flatten(weighted = TRUE) %>%
         activate(nodes) %>%
         filter(id == actors) %>%
         mutate(deg = centrality_degree(weights = weight)) %>%
@@ -35,6 +37,7 @@ centrality_neighborhood <- function(graph, actors, layers, weighted = FALSE){
       return(z)
     } else{
       graph %>%
+        flatten(weighted = TRUE) %>%
         activate(edges) %>%
         filter(name == layers) %>%
         activate(nodes) %>%
