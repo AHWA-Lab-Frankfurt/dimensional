@@ -2,9 +2,10 @@ library(dimensional)
 
 decor.graph <- tidygraph::tbl_graph(nodes = nodes_decor, edges = edges_decor, directed = FALSE)
 
-cmu <- decor.graph %>% dimension_matlist(name)
-cmw <- decor.graph %>% dimension_matlist(name, weighted = TRUE)
+cmu <- decor.graph %>% dimension_matlist(dimensions = name)
+cmw <- decor.graph %>% dimension_matlist(dimensions = name, weighted = TRUE)
 dimensions <- decor.graph %>% igraph::get.data.frame("edges") %>% dplyr::pull(name) %>% unique
+cma <- decor.graph %>% dimension_matlist(actors = c(2:7,15,18:19), dimensions = name)
 
 
 is.binary <- function(x) all(x == 0 | x == 1)
@@ -43,4 +44,10 @@ testthat::test_that("weighted matrices match the network", {
    testthat::expect_equal(adj, graph)
   }
 })
+
+testthat::test_that("actors selects the right actors", {
+  testthat::expect_equal(rownames(cma[[1]]), as.character(c(2:7,15,18:19)))
+  testthat::expect_equal(colnames(cma[[5]]), as.character(c(2:7,15,18:19)))
+})
+
 

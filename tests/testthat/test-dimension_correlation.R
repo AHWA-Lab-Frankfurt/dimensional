@@ -43,3 +43,4 @@ testthat::test_that("pvalue is correct based on known very strong correlation", 
   testthat::expect_true(dcu.pv["dragged_organic","knotted_cord_roulette"] < 0.05)
   testthat::expect_true(dcw.pv["dragged_organic","knotted_cord_roulette"] < 0.05)
 })
+
