@@ -4,10 +4,29 @@
 #' @param graph A graph of class tbl_graph
 #' @param weighted Logical value if weight of the edges of the dimensions is considered or not. Defaults to unweighted network.
 
-dimension_correlation_node <- function(graph, weighted = FALSE, pvalue = FALSE){
-  edges.name <- graph %>%
+dimension_correlation_node <- function(graph, actors, dimensions, weighted = FALSE, pvalue = FALSE){
+
+  if(missing(dimensions)){
+    stop("dimension missing without default")
+  }
+  else{
+
+    dimensions <- rlang::enquo(dimensions)
+
+  if(missing(actors)){
+
+  }
+  else{
+    a <- actors
+
+    graph <- graph %>%
+      tidygraph::activate(nodes) %>%
+      dplyr::filter(id %in% a)
+  }
+
+   edges.name <- graph %>%
     igraph::get.data.frame("edges") %>%
-    dplyr::pull(name) %>%
+    dplyr::pull(!!dimensions) %>%
     unique()
 
   vlist <- list()
@@ -20,7 +39,8 @@ dimension_correlation_node <- function(graph, weighted = FALSE, pvalue = FALSE){
 
       v <- graph %>%
         tidygraph::activate(edges) %>%
-        dplyr::filter(name == edges.name[j]) %>%
+        #filtering the edgelist for the dimension wanted
+        dplyr::filter_at(dplyr::vars(!!dimensions), dplyr::all_vars(. == edges.name[j])) %>%
         tidygraph::activate(nodes) %>%
         dplyr::mutate(deg = tidygraph::centrality_degree(weights = weight)) %>%
         dplyr::pull(deg)
@@ -38,7 +58,8 @@ dimension_correlation_node <- function(graph, weighted = FALSE, pvalue = FALSE){
 
       v <- graph %>%
         tidygraph::activate(edges) %>%
-        dplyr::filter(name == edges.name[j])%>%
+        #filtering the edgelist for the dimension wanted
+        dplyr::filter_at(dplyr::vars(!!dimensions), dplyr::all_vars(. == edges.name[j])) %>%
         tidygraph::activate(nodes) %>%
         dplyr::mutate(deg = tidygraph::centrality_degree()) %>%
         dplyr::pull(deg)
@@ -78,4 +99,4 @@ if(pvalue == TRUE)  {
 return(dimension.correlation)
  }
 }
-
+}

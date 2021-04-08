@@ -68,7 +68,7 @@ head(conred)
 ## `dimensional_correlation_node()``
 Calculates the correlation between dimensions based on the neighborhood centrality of the nodes in each layer as defined by Dickison et al. (2016). The neighborhood centrality can be weighted. By default it is unweighted. The output is a correlation matrix of the dimensions.
 ```{r}
-dimension.correlation.node <- dimension_correlation_node(decor.graph) 
+dimension.correlation.node <- dimension_correlation_node(decor.graph, dimensions = name) 
 
 
 #plotting a heatmap for the correlation matrix
@@ -82,7 +82,7 @@ ggplot(data = cor_tri, aes(Var2, Var1, fill = value)) +
  scale_fill_viridis_c()+
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-dimension.pvalue.node <- dimension_correlation_node(decor.graph, pvalue = TRUE)[[2]] 
+dimension.pvalue.node <- dimension_correlation_node(decor.graph, dimensions = name, pvalue = TRUE)[[2]] 
 
 
 #plotting a heatmap for the correlation matrix
@@ -97,7 +97,7 @@ ggplot(data = pv_tri, aes(Var2, Var1, fill = robustness)) +
  scale_fill_manual(values = c("green", "red"))+
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-dimension.correlation.node <- dimension_correlation_node(decor.graph, weight = TRUE) 
+dimension.correlation.node <- dimension_correlation_node(decor.graph, dimensions = name, weight = TRUE) 
 
 
 #plotting a heatmap for the correlation matrix
@@ -111,7 +111,7 @@ ggplot(data = cor_tri, aes(Var2, Var1, fill = value)) +
  scale_fill_viridis_c()+
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-dimension.pvalue.node <- dimension_correlation_node(decor.graph, weight = TRUE, pvalue = TRUE)[[2]] 
+dimension.pvalue.node <- dimension_correlation_node(decor.graph, dimensions = name, weight = TRUE, pvalue = TRUE)[[2]] 
 
 
 #plotting a heatmap for the correlation matrix
