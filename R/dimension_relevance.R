@@ -5,22 +5,37 @@
 #' @param weighted Logical value if the neighborhood centrality should be weighted or not. Defaults to unweighted network.
 #' @export
 
-dimension_relevance <- function(graph, weighted = FALSE) {
+dimension_relevance <- function(graph, actors, weighted = FALSE) {
   #graph <- enquote(graph)
+  if(missing(actors)){
 
+  }
+  else{
+    a <- actors
+
+    graph <- graph %>%
+      tidygraph::activate(nodes) %>%
+      dplyr::filter(id %in% a)
+  }
+
+  #getting the names of the different dimensions, by getting all the different layers of the chosen aspect of the network
+  edges.name <- graph %>%
+    igraph::get.data.frame("edges") %>%
+    dplyr::pull(!!dimensions) %>%
+    unique()
   #the nodes.id, the nodes.label and the edges.name vectors are needed for the for-loop
   nodes.id <- graph %>%
-    get.data.frame("vertices") %>%
+    tidygraph::get.data.frame("vertices") %>%
     select(id) %>%
     deframe
 
   nodes.label <- graph %>%
-    get.data.frame("vertices") %>%
+    tidygraph::get.data.frame("vertices") %>%
     select(label) %>%
     deframe
 
   edges.name <- graph %>%
-    get.data.frame("edges") %>%
+    tidygraph::get.data.frame("edges") %>%
     select(name) %>%
     deframe() %>%
     unique()
