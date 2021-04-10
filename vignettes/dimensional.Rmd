@@ -60,6 +60,7 @@ l <- c("folded_strip_roulette")
 centrality_neighborhood(decor.graph)
 
 ```
+
 ## `connective_redundancy()``
 Calculates the connective redundancy of a set of actors over a set of layers as defined by Dickison et al. (2016). Can take a specified actor, or a vector of actors, as well as a specified layer of vector of layers. If these are left unspecified, it defaults to the entire graph. Returns a tibble with actor name, degree, neighbors, and redundancy.
 ```{r connective redundancy}
