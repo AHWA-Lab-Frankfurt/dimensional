@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(dimensional)
 library(tidygraph)
+library(igraph)
 library(tidyverse)
 ```
 # How to use the package:
@@ -65,4 +66,69 @@ conred <- connective_redundancy(decor.graph)
 head(conred)
 ```
 
+## `dimensional_correlation_node()``
+Calculates the correlation between dimensions based on the neighborhood centrality of the nodes in each layer as defined by Dickison et al. (2016). The neighborhood centrality can be weighted. By default it is unweighted. The output is a correlation matrix of the dimensions.
+```{r}
+dimension.correlation.node <- dimension_correlation_node(decor.graph, dimensions = name) 
+
+
+#plotting a heatmap for the correlation matrix
+dimension.correlation.node[lower.tri(dimension.correlation.node, diag = TRUE)] <- NA
+cor_tri <- as.data.frame(dimension.correlation.node) %>% 
+  mutate(Var1 = factor(row.names(.), levels=row.names(.))) %>% 
+  gather(key = Var2, value = value, -Var1, na.rm = TRUE, factor_key = TRUE) 
+
+ggplot(data = cor_tri, aes(Var2, Var1, fill = value)) + 
+  geom_tile()+
+ scale_fill_viridis_c()+
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+dimension.pvalue.node <- dimension_correlation_node(decor.graph, dimensions = name, pvalue = TRUE)[[2]] 
+
+
+#plotting a heatmap for the correlation matrix
+dimension.pvalue.node[lower.tri(dimension.pvalue.node, diag = TRUE)] <- NA
+pv_tri <- as.data.frame(dimension.pvalue.node) %>% 
+  mutate(Var1 = factor(row.names(.), levels=row.names(.))) %>% 
+  gather(key = Var2, value = value, -Var1, na.rm = TRUE, factor_key = TRUE) %>% 
+  mutate(robustness = case_when(value < 0.05 ~ "p-value < 0.05", TRUE ~ "p-value > 0.05"))
+
+ggplot(data = pv_tri, aes(Var2, Var1, fill = robustness)) + 
+  geom_tile()+
+ scale_fill_manual(values = c("green", "red"))+
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+dimension.correlation.node <- dimension_correlation_node(decor.graph, dimensions = name, weight = TRUE) 
+
+
+#plotting a heatmap for the correlation matrix
+dimension.correlation.node[lower.tri(dimension.correlation.node, diag = TRUE)] <- NA
+cor_tri <- as.data.frame(dimension.correlation.node) %>% 
+  mutate(Var1 = factor(row.names(.), levels=row.names(.))) %>% 
+  gather(key = Var2, value = value, -Var1, na.rm = TRUE, factor_key = TRUE) 
+
+ggplot(data = cor_tri, aes(Var2, Var1, fill = value)) + 
+  geom_tile()+
+ scale_fill_viridis_c()+
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+dimension.pvalue.node <- dimension_correlation_node(decor.graph, dimensions = name, weight = TRUE, pvalue = TRUE)[[2]] 
+
+
+#plotting a heatmap for the correlation matrix
+dimension.pvalue.node[lower.tri(dimension.pvalue.node, diag = TRUE)] <- NA
+pv_tri <- as.data.frame(dimension.pvalue.node) %>% 
+  mutate(Var1 = factor(row.names(.), levels=row.names(.))) %>% 
+  gather(key = Var2, value = value, -Var1, na.rm = TRUE, factor_key = TRUE) %>% 
+  mutate(robustness = case_when(value < 0.05 ~ "p-value < 0.05", TRUE ~ "p-value > 0.05"))
+
+ggplot(data = pv_tri, aes(Var2, Var1, fill = robustness)) + 
+  geom_tile()+
+ scale_fill_manual(values = c("green", "red"))+
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+#pvalues can be taken from the matrix to get the exact value
+paste("pvalue straight_cord_mat& braided_strip_roulette", dimension.pvalue.node["straight_cord_mat", "braided_strip_roulette"])
+
+```
 
