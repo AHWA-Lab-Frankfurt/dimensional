@@ -5,7 +5,13 @@
 #' @param weighted Logical value if the neighborhood centrality should be weighted or not. Defaults to unweighted network.
 #' @export
 
-dimension_relevance <- function(graph, actors, weighted = FALSE) {
+dimension_relevance <- function(graph, actors, dimensions, weighted = FALSE) {
+  if(missing(dimensions)){
+    stop("dimension missing without default")
+  }
+  else{
+    dimensions <- rlang::enquo(dimensions)
+
   #graph <- enquote(graph)
   if(missing(actors)){
 
@@ -23,22 +29,19 @@ dimension_relevance <- function(graph, actors, weighted = FALSE) {
     igraph::get.data.frame("edges") %>%
     dplyr::pull(!!dimensions) %>%
     unique()
+
   #the nodes.id, the nodes.label and the edges.name vectors are needed for the for-loop
   nodes.id <- graph %>%
-    tidygraph::get.data.frame("vertices") %>%
+   igraph::get.data.frame("vertices") %>%
     select(id) %>%
     deframe
 
   nodes.label <- graph %>%
-    tidygraph::get.data.frame("vertices") %>%
+    igraph::get.data.frame("vertices") %>%
     select(label) %>%
     deframe
 
-  edges.name <- graph %>%
-    tidygraph::get.data.frame("edges") %>%
-    select(name) %>%
-    deframe() %>%
-    unique()
+
 
   #a df in which the neighbor values of the different nodes will be documented
   dimcentrality.df <- data.frame(id = nodes.id, label = nodes.label)
@@ -59,7 +62,11 @@ dimension_relevance <- function(graph, actors, weighted = FALSE) {
 
       ##we create a vector of all the centralities of a layer
       deg <- decor.graph %>%
-        centrality_neighborhood(layer = edges.name[j], weighted = TRUE)
+        tidygraph::activate(edges) %>%
+        dplyr::filter_at(dplyr::vars(!!dimensions), dplyr::all_vars(. == edges.name[j])) %>%
+        tidygraph::activate(nodes) %>%
+        dplyr::mutate(deg = tidygraph::centrality_degree(weights = weight)) %>%
+        dplyr::pull(deg)
 
       deg <- data.frame(deg = deg)
 
@@ -85,7 +92,11 @@ dimension_relevance <- function(graph, actors, weighted = FALSE) {
 
       ##we create a vector of all the centralities of a layer
       deg <- decor.graph %>%
-        centrality_neighborhood(layer = edges.name[j])
+        tidygraph::activate(edges) %>%
+        dplyr::filter_at(dplyr::vars(!!dimensions), dplyr::all_vars(. == edges.name[j])) %>%
+        tidygraph::activate(nodes) %>%
+        dplyr::mutate(deg = tidygraph::centrality_degree()) %>%
+        dplyr::pull(deg)
 
       deg <- data.frame(deg = deg)
 
@@ -93,21 +104,23 @@ dimension_relevance <- function(graph, actors, weighted = FALSE) {
       dimcentrality.df <- dimcentrality.df %>%
         add_column(deg)
 
-      names(dimcentrality.df)[names(dimcentrality.df) == "simple"] <- edges.name[j]
+      names(dimcentrality.df)[names(dimcentrality.df) == "deg"] <- edges.name[j]
 
     }
 
   }
 
   dimrel.df <- dimcentrality.df %>%
-    mutate(across(4:ncol(dimcentrality.df), function(x) x / neighbor))
+    dplyr::mutate(across(4:ncol(dimcentrality.df), function(x) x / neighbor))
 
   dimrelmean <- dimrel.df %>%
-    select(-c(1:2)) %>%
-    summarise_all(mean) %>%
+    dplyr::select(-c(1:2)) %>%
+    dplyr::summarise_all(mean) %>%
     add_column(id = 0, label = "mean")
 
-  dimrel.df <- rbind(dimrel.df, dimrelmean)
+  dimrel.df <- rbind(dimrel.df, dimrelmean) %>%
+    dplyr::mutate_at(dplyr::vars(3:length(dimrel.df)), round(digits = 3))
 
   return(dimrel.df)
+}
 }
