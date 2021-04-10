@@ -4,7 +4,8 @@
 #' @param graph A graph of class tbl_graph
 #' @param actors An actor or a vector of actors. Defaults to all actors in the graph.
 #' @param layers A layer or a vector of layers. Defaults to all layers of the graph
-#' @param weighted Logical value if the neighborhood centrality should be weighted or not. Defaults to unweighted network.
+#' @import tidygraph
+#' @importFrom rlang .data
 #' @export
 
 centrality_neighborhood <- function(graph, actors, layers, weighted = FALSE){
