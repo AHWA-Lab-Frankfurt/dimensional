@@ -2,26 +2,29 @@ Package: dimensional
 Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
+Author: Nikolas Gestrich, Juan-Marco Puer
+Maintainer: Nikolas Gestrich <gestrich@uni-frankfurt.det>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends: 
-    R (>= 2.10),
-    tidyverse
+    R (>= 2.10)
 Imports:
+    tidyverse,
     tidygraph,
     igraph,
     rlang,
     dplyr,
-    purrr
+    purrr,
+    magrittr
 Suggests: 
     rmarkdown,
     knitr,
     testthat (>= 3.0.0)
-VignetteBuilder: knitr
+VignetteBuilder: 
+    knitr,
+    rmarkdown            
 RoxygenNote: 7.1.1
 Config/testthat/edition: 3

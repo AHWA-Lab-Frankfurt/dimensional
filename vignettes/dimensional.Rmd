@@ -24,6 +24,7 @@ library(tidyverse)
 ## Data:
 Dimensional takes data in a table graph format. This can be added a number of ways, for details see https://www.data-imaginist.com/2017/introducing-tidygraph/. For an example, we will here use an edgelist and a nodelist to create an undirected table graph.
 ```{r make tbl-graph}
+data("nodes_decor", "edges_decor")
 decor.graph <- tbl_graph(nodes = nodes_decor, edges = edges_decor, directed = FALSE)
 
 decor.graph
@@ -34,11 +35,11 @@ In this example data, the different dimensions of the graph are stored as edge a
 This function flattens a multilayer graph into a simple graph. This function is useful for comparing multilayer with simple network measures. 
 `flatten()`simply collapses all edges between a pair of actors across all layers into a single edge. If there is a weight column, the weights of all collapsed edges will be summed. If weight = NULL, no weights are retained. 
 ```{r}
-simple.flat <- flatten(decor.graph, weight = NULL)
+simple.flat <- flatten(decor.graph, weighted = FALSE)
 
 simple.flat
 
-weighted.flat <- flatten(decor.graph, weight = weight)
+weighted.flat <- flatten(decor.graph, weighted = TRUE)
 
 weighted.flat
 ```
