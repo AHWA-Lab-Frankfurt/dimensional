@@ -33,13 +33,11 @@ dimension_relevance <- function(graph, actors, dimensions, weighted = FALSE) {
   #the nodes.id, the nodes.label and the edges.name vectors are needed for the for-loop
   nodes.id <- graph %>%
    igraph::get.data.frame("vertices") %>%
-    select(id) %>%
-    deframe
+    dplyr::pull(id)
 
   nodes.label <- graph %>%
     igraph::get.data.frame("vertices") %>%
-    select(label) %>%
-    deframe
+    dplyr::pull(label)
 
 
 
@@ -48,7 +46,7 @@ dimension_relevance <- function(graph, actors, dimensions, weighted = FALSE) {
 
   if(weighted == TRUE){
     deg <- graph%>%
-      centrality_neighborhood(weighted = TRUE)
+     centrality_neighborhood(weighted = TRUE)
 
     deg <- data.frame(deg = deg)
 
@@ -80,7 +78,7 @@ dimension_relevance <- function(graph, actors, dimensions, weighted = FALSE) {
   else{
 
     deg <- graph%>%
-      centrality_neighborhood()
+     centrality_neighborhood()
 
 
     dimcentrality.df <- dimcentrality.df %>%
@@ -119,7 +117,10 @@ dimension_relevance <- function(graph, actors, dimensions, weighted = FALSE) {
     add_column(id = 0, label = "mean")
 
   dimrel.df <- rbind(dimrel.df, dimrelmean) %>%
-    dplyr::mutate_at(dplyr::vars(3:length(dimrel.df)), round(digits = 3))
+    dplyr::mutate_at(dplyr::vars(3:length(dimrel.df)), as.numeric)
+  #rounding would make it more beautiful
+  # %>%
+   # dplyr::mutate_if(is.numeric, round(digits = 3))
 
   return(dimrel.df)
 }
