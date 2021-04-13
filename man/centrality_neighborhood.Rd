@@ -4,7 +4,7 @@
 \alias{centrality_neighborhood}
 \title{Neighborhood centrality}
 \usage{
-centrality_neighborhood(graph, actors, layers, weighted = FALSE)
+centrality_neighborhood(graph, actors, layers)
 }
 \arguments{
 \item{graph}{A graph of class tbl_graph}
@@ -14,5 +14,5 @@ centrality_neighborhood(graph, actors, layers, weighted = FALSE)
 \item{layers}{A layer or a vector of layers. Defaults to all layers of the graph}
 }
 \description{
-Calculate neighborhood centrality for a set of acotrs over a set of layers. The output is a vector with values for every node.
+Calculate neighborhood centrality for a set of acotrs over a set of layers
 }
