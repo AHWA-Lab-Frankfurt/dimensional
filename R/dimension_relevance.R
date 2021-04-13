@@ -46,13 +46,14 @@ dimension_relevance <- function(graph, actors, dimensions, weighted = FALSE) {
 
   if(weighted == TRUE){
     deg <- graph%>%
-     centrality_neighborhood(weighted = TRUE)
+      tidygraph::activate(nodes) %>%
+      dplyr::mutate(deg = tidygraph::centrality_degree(weights = weight)) %>%
+      dplyr::pull(deg)
 
     deg <- data.frame(deg = deg)
 
-
     dimcentrality.df <- dimcentrality.df %>%
-      add_column(deg)
+      tibble::add_column(deg)
 
     names(dimcentrality.df)[names(dimcentrality.df) == "deg"] <- "neighbor"
 
@@ -69,7 +70,7 @@ dimension_relevance <- function(graph, actors, dimensions, weighted = FALSE) {
       deg <- data.frame(deg = deg)
 
       dimcentrality.df <- dimcentrality.df %>%
-        add_column(deg)
+        tibble::add_column(deg)
 
       names(dimcentrality.df)[names(dimcentrality.df) == "deg"] <- edges.name[j]
     }
@@ -78,11 +79,13 @@ dimension_relevance <- function(graph, actors, dimensions, weighted = FALSE) {
   else{
 
     deg <- graph%>%
-     centrality_neighborhood()
+     centrality_neighborhood() %>%
+      tidygraph::activate(nodes) %>%
+      dplyr::pull(neighbours)
 
 
     dimcentrality.df <- dimcentrality.df %>%
-      add_column(deg)
+      tibble::add_column(deg)
 
     names(dimcentrality.df)[names(dimcentrality.df) == "deg"] <- "neighbor"
 
@@ -100,7 +103,7 @@ dimension_relevance <- function(graph, actors, dimensions, weighted = FALSE) {
 
 
       dimcentrality.df <- dimcentrality.df %>%
-        add_column(deg)
+        tibble::add_column(deg)
 
       names(dimcentrality.df)[names(dimcentrality.df) == "deg"] <- edges.name[j]
 
@@ -114,7 +117,7 @@ dimension_relevance <- function(graph, actors, dimensions, weighted = FALSE) {
   dimrelmean <- dimrel.df %>%
     dplyr::select(-c(1:2)) %>%
     dplyr::summarise_all(mean) %>%
-    add_column(id = 0, label = "mean")
+    tibble::add_column(id = 0, label = "mean")
 
   dimrel.df <- rbind(dimrel.df, dimrelmean) %>%
     dplyr::mutate_at(dplyr::vars(3:length(dimrel.df)), as.numeric)
