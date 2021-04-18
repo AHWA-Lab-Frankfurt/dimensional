@@ -2,7 +2,7 @@ library(dimensional)
 
 decor.graph <- tidygraph::tbl_graph(nodes = nodes_decor, edges = edges_decor, directed = FALSE)
 dimensions <- decor.graph %>% igraph::get.data.frame("edges") %>% dplyr::pull(name) %>% unique
-#dcna <- decor.graph %>% dimension_correlation_node(actors = c(2:7,15,18:19), dimensions = name)
+dra <- decor.graph %>% dimension_relevance(actors = c(2:7,15,18:19), dimensions = name)
 dru <- dimension_relevance(decor.graph, dimensions = name)
 drw <- dimension_relevance(decor.graph, dimensions = name, weighted = TRUE)
 
