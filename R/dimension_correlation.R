@@ -2,6 +2,13 @@
 #'
 #' Calculate the correlation of the dimensions of a graph. The output is a correlation matrix of the layers.
 #' @param graph A graph of class tbl_graph
+#' @param pvalue Locial value if pvalue should be computed. If it is then the output is a list with 2 matrices.
+#' @import tidygraph
+#' @import rlang
+#' @import tidyverse
+#' @import igraph
+#' @export
+
 dimension_correlation <- function(matlist, pvalue = FALSE){
 
  prep <- function(x) {

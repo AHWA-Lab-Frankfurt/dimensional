@@ -2,10 +2,13 @@
 #'
 #' Creates a list containing the adjacency matrices for each layer of the network. This can be used for further analyses of the layers (for example their correlation).
 #' @param graph A graph of class tbl_graph
+#' @param actors An actor or a vector of actors. Defaults to all actors in the graph.
 #' @param dimensions The Dimensions of the edges that should be taken into account. A variable of the edgelist.
 #' @param weighted Logical value if weight of the edges of the dimensions is considered or not. Defaults to unweighted network.
 #' @import tidygraph
 #' @import rlang
+#' @import tidyverse
+#' @import igraph
 #' @export
 
 dimension_matlist <- function(graph, actors, dimensions, weighted = FALSE){

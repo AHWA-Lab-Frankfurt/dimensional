@@ -9,7 +9,11 @@ dimension_relevance(graph, actors, dimensions, weighted = FALSE)
 \arguments{
 \item{graph}{A graph of class tbl_graph}
 
-\item{weighted}{Logical value if the neighborhood centrality should be weighted or not. Defaults to unweighted network.}
+\item{actors}{An actor or a vector of actors. Defaults to all actors in the graph.}
+
+\item{dimensions}{The Dimensions of the edges that should be taken into account. A variable of the edgelist.}
+
+\item{weighted}{Logical value if weight of the edges of the dimensions is considered or not. Defaults to unweighted network.}
 }
 \description{
 Calculate the relevance of the dimensions(layers) for each node of a network. The output is a dataframe with the neighbor_centrality of the whole network and the relevance of each dimension for each node aswell as the mean relevance of each dimension for the whole network.

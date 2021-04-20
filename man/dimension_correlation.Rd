@@ -7,6 +7,8 @@
 dimension_correlation(matlist, pvalue = FALSE)
 }
 \arguments{
+\item{pvalue}{Locial value if pvalue should be computed. If it is then the output is a list with 2 matrices.}
+
 \item{graph}{A graph of class tbl_graph}
 }
 \description{

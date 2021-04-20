@@ -15,7 +15,13 @@ dimension_correlation_node(
 \arguments{
 \item{graph}{A graph of class tbl_graph}
 
+\item{actors}{An actor or a vector of actors. Defaults to all actors in the graph.}
+
+\item{dimensions}{The Dimensions of the edges that should be taken into account. A variable of the edgelist.}
+
 \item{weighted}{Logical value if weight of the edges of the dimensions is considered or not. Defaults to unweighted network.}
+
+\item{pvalue}{Locial value if pvalue should be computed. If it is then the output is a list with 2 matrices.}
 }
 \description{
 Calculate the correlation of the dimensions of a graph based on the neighborhood centrality of the nodes in each layer. The output is a correlation matrix of the layers.

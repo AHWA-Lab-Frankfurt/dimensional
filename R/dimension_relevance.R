@@ -2,7 +2,13 @@
 #'
 #' Calculate the relevance of the dimensions(layers) for each node of a network. The output is a dataframe with the neighbor_centrality of the whole network and the relevance of each dimension for each node aswell as the mean relevance of each dimension for the whole network.
 #' @param graph A graph of class tbl_graph
-#' @param weighted Logical value if the neighborhood centrality should be weighted or not. Defaults to unweighted network.
+#' @param actors An actor or a vector of actors. Defaults to all actors in the graph.
+#' @param dimensions The Dimensions of the edges that should be taken into account. A variable of the edgelist.
+#' @param weighted Logical value if weight of the edges of the dimensions is considered or not. Defaults to unweighted network.
+#' @import tidygraph
+#' @import rlang
+#' @import tidyverse
+#' @import igraph
 #' @export
 
 dimension_relevance <- function(graph, actors, dimensions, weighted = FALSE) {
@@ -45,7 +51,7 @@ dimension_relevance <- function(graph, actors, dimensions, weighted = FALSE) {
   dimcentrality.df <- data.frame(id = nodes.id, label = nodes.label)
 
   if(weighted == TRUE){
-    deg <- graph%>%
+    deg <- graph %>%
       tidygraph::activate(nodes) %>%
       dplyr::mutate(deg = tidygraph::centrality_degree(weights = weight)) %>%
       dplyr::pull(deg)

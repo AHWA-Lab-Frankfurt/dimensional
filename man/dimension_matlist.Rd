@@ -9,6 +9,8 @@ dimension_matlist(graph, actors, dimensions, weighted = FALSE)
 \arguments{
 \item{graph}{A graph of class tbl_graph}
 
+\item{actors}{An actor or a vector of actors. Defaults to all actors in the graph.}
+
 \item{dimensions}{The Dimensions of the edges that should be taken into account. A variable of the edgelist.}
 
 \item{weighted}{Logical value if weight of the edges of the dimensions is considered or not. Defaults to unweighted network.}
