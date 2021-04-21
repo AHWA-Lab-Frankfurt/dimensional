@@ -75,6 +75,7 @@ Calculates the relevance of each layer for each node as defined by Berlingerio e
 ```{r}
 dimension_relevance(decor.graph, dimensions = name, weighted = TRUE)
 dimension_relevance(decor.graph, dimensions = name)
+dimension_relevance(decor.graph, actors = c(2:7,15,18:19), dimensions = name)
 
 
 dimheat <- decor.graph %>% 

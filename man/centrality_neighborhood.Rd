@@ -14,5 +14,5 @@ centrality_neighborhood(graph, actors, layers)
 \item{layers}{A layer or a vector of layers. Defaults to all layers of the graph}
 }
 \description{
-Calculate neighborhood centrality for a set of acotrs over a set of layers
+Calculate neighborhood centrality for a set of actors over a set of layers
 }

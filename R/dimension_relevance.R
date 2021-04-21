@@ -23,32 +23,33 @@ dimension_relevance <- function(graph, actors, dimensions, weighted = FALSE) {
 
   }
   else{
-    a <- actors
+    a <- actors %>%
+      as.character()
 
     graph <- graph %>%
       tidygraph::activate(nodes) %>%
       dplyr::filter(id %in% a)
+
   }
 
-  #getting the names of the different dimensions, by getting all the different layers of the chosen aspect of the network
-  edges.name <- graph %>%
-    igraph::get.data.frame("edges") %>%
-    dplyr::pull(!!dimensions) %>%
-    unique()
+    #getting the names of the different layers, by getting all the different layers of the chosen aspect of the network
+    edges.name <- graph %>%
+      igraph::get.data.frame("edges") %>%
+      dplyr::pull(!!dimensions) %>%
+      unique()
 
-  #the nodes.id, the nodes.label and the edges.name vectors are needed for the for-loop
-  nodes.id <- graph %>%
-   igraph::get.data.frame("vertices") %>%
-    dplyr::pull(id)
 
-  nodes.label <- graph %>%
-    igraph::get.data.frame("vertices") %>%
-    dplyr::pull(label)
+    node.id <- graph %>%
+      tidygraph::activate(nodes) %>%
+      dplyr::pull(id)
 
+    node.label <- graph %>%
+      tidygraph::activate(nodes) %>%
+      dplyr::pull(label)
 
 
   #a df in which the neighbor values of the different nodes will be documented
-  dimcentrality.df <- data.frame(id = nodes.id, label = nodes.label)
+  dimcentrality.df <- data.frame(id = node.id, label = node.label)
 
   if(weighted == TRUE){
     deg <- graph %>%
@@ -84,11 +85,8 @@ dimension_relevance <- function(graph, actors, dimensions, weighted = FALSE) {
   }
   else{
 
-    deg <- graph%>%
-     centrality_neighborhood() %>%
-      tidygraph::activate(nodes) %>%
-      dplyr::pull(neighbours)
-
+    deg <- graph %>%
+     centrality_neighborhood()
 
     dimcentrality.df <- dimcentrality.df %>%
       tibble::add_column(deg)
