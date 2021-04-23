@@ -25,11 +25,10 @@ dimension_correlation_node <- function(graph, actors, dimensions, weighted = FAL
 
   }
   else{
-    a <- actors
 
     graph <- graph %>%
       tidygraph::activate(nodes) %>%
-      dplyr::filter(id %in% a)
+      dplyr::filter(id %in% actors)
   }
 
    edges.name <- graph %>%

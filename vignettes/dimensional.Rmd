@@ -48,7 +48,7 @@ weighted.flat
 ## `multidesc()`: 
 This function will give a particular set of measures for a basic description of a multilayer network, both layer by layer and for the flattened network. The measures are: number of nodes, density, clustering coefficient, degree centralization, average path length, diameter.
 ```{r multidesc}
-# multidesc(decor.graph)
+ multidesc(decor.graph)
 ```
 
 ## `centrality_neighborhood()`
@@ -67,6 +67,7 @@ Calculates the connective redundancy of a set of actors over a set of layers as 
 conred <- connective_redundancy(decor.graph)
 
 head(conred)
+conred
 ```
 
 
@@ -75,7 +76,7 @@ Calculates the relevance of each layer for each node as defined by Berlingerio e
 ```{r}
 dimension_relevance(decor.graph, dimensions = name, weighted = TRUE)
 dimension_relevance(decor.graph, dimensions = name)
-dimension_relevance(decor.graph, actors = c(2:7,15,18:19), dimensions = name)
+dimension_relevance(decor.graph, actors = c(2:7,15,18:19), dimensions = name, weighted = TRUE)
 
 
 dimheat <- decor.graph %>% 
@@ -253,6 +254,21 @@ ggplot(data = pv_tri, aes(Var2, Var1, fill = robustness)) +
 
 #pvalues can be taken from the matrix to get the exact value
 paste("pvalue straight_cord_mat& braided_strip_roulette", dimension.pvalue.node["straight_cord_mat", "braided_strip_roulette"])
+
+dimension.node.a <- dimension_correlation_node(decor.graph, actors = c(2:7,15,18:19), dimensions = name, weight = TRUE)
+
+
+#plotting a heatmap for the correlation matrix
+dimension.node.a[lower.tri(dimension.node.a, diag = TRUE)] <- NA
+cor_tri <- as.data.frame(dimension.node.a) %>% 
+  mutate(Var1 = factor(row.names(.), levels=row.names(.))) %>% 
+  gather(key = Var2, value = value, -Var1, na.rm = TRUE, factor_key = TRUE) 
+
+ggplot(data = cor_tri, aes(Var2, Var1, fill = value)) + 
+  geom_tile()+
+ scale_fill_viridis_c()+
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
 
 ```
 
