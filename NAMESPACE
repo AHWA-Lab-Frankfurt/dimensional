@@ -2,9 +2,12 @@
 
 export("%>%")
 export(centrality_neighborhood)
+export(compare_layers)
 export(connective_redundancy)
+export(dimension_matlist)
+export(dimension_relevance)
 export(flatten)
-export(multidesc)
+import(rlang)
 import(tidygraph)
 importFrom(magrittr,"%>%")
 importFrom(rlang,.data)

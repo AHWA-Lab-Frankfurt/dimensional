@@ -26,5 +26,5 @@ Suggests:
 VignetteBuilder: 
     knitr,
     rmarkdown            
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Config/testthat/edition: 3
